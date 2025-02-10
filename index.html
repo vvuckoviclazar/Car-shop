@@ -4,11 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Car Shopping</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link href="style.css" rel="stylesheet" />
   </head>
   <body>
-    <h1>Car Shop</h1>
-    <div id="car-container" class="car-list"></div>
+    <h1>Find your perfect car</h1>
+    <div class="select-div">
+      <label for="availability">Availability:</label>
+      <select class="availability">
+        <option value="all">All</option>
+        <option value="available">Available</option>
+        <option value="availableNot">Not Available</option>
+      </select>
+
+      <label for="options">Sort options:</label>
+      <select class="options">
+        <option value="AZ">A-Z</option>
+        <option value="ZA">Z-A</option>
+        <option value="priceLowest">Price Lowest</option>
+        <option value="priceHighest">Price Highest</option>
+      </select>
+    </div>
+    <ul class="car-list"></ul>
 
     <script src="script.js"></script>
   </body>

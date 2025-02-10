@@ -1,3 +1,7 @@
+"use strict";
+
+const carList = document.querySelector(".car-list");
+
 const cars = [
   {
     id: 1,
@@ -6,7 +10,7 @@ const cars = [
     manufacturedYear: 2019,
     doors: 4,
     price: 22000,
-    available: "yes",
+    available: "Yes",
     image: "first car toyota.jpg",
   },
   {
@@ -16,7 +20,7 @@ const cars = [
     manufacturedYear: 2020,
     doors: 4,
     price: 25000,
-    available: "yes",
+    available: "Yes",
     image: "honda civic second.webp",
   },
   {
@@ -26,7 +30,7 @@ const cars = [
     manufacturedYear: 2018,
     doors: 2,
     price: 35000,
-    available: "no",
+    available: "No",
     image: "mustant 3.png",
   },
   {
@@ -36,7 +40,7 @@ const cars = [
     manufacturedYear: 2021,
     doors: 4,
     price: 45000,
-    available: "yes",
+    available: "Yes",
     image: "BMW 3 Series 4.png",
   },
   {
@@ -46,7 +50,7 @@ const cars = [
     manufacturedYear: 2017,
     doors: 2,
     price: 32000,
-    available: "no",
+    available: "No",
     image: "Chavrolet 5.jpg",
   },
   {
@@ -56,7 +60,7 @@ const cars = [
     manufacturedYear: 2022,
     doors: 4,
     price: 42000,
-    available: "yes",
+    available: "Yes",
     image: "audi a4 6.jpg",
   },
   {
@@ -66,7 +70,7 @@ const cars = [
     manufacturedYear: 2020,
     doors: 4,
     price: 50000,
-    available: "yes",
+    available: "Yes",
     image: "mercedes e klasa 7.jpg",
   },
   {
@@ -76,7 +80,7 @@ const cars = [
     manufacturedYear: 2019,
     doors: 4,
     price: 38000,
-    available: "no",
+    available: "No",
     image: "lexus 8.webp",
   },
   {
@@ -86,7 +90,7 @@ const cars = [
     manufacturedYear: 2021,
     doors: 4,
     price: 28000,
-    available: "yes",
+    available: "Yes",
     image: "golf 9.jpg",
   },
   {
@@ -96,38 +100,36 @@ const cars = [
     manufacturedYear: 2022,
     doors: 4,
     price: 32000,
-    available: "yes",
+    available: "Yes",
     image: "subaru 10.png",
   },
 ];
 
 function displayCars() {
-  const carContainer = document.getElementById("car-container");
-
   cars.forEach((car) => {
-    const carCard = document.createElement("div");
+    const carCard = document.createElement("li");
     carCard.classList.add("car-card");
 
     carCard.innerHTML = `
-            <img src="${car.image}" alt="${car.name}">
-            <h3>${car.name}</h3>
-            <p>Brand: ${car.brand}</p>
-            <p>Year: ${car.manufacturedYear}</p>
-            <p>Doors: ${car.doors}</p>
-            <p>Price: $${car.price.toLocaleString()}</p>
-            <button onclick="addToCart(${car.id})" ${
-      car.available === "no" ? "disabled" : ""
-    }>
-                ${car.available === "yes" ? "Add to Cart" : "Out of Stock"}
-            </button>
+     <h3>${car.name}</h3>
+     <div class="li-div">
+      <img src="${car.image}"  class="car-image-${car.id} car-img">
+        <div class="info-div">
+           <p><strong>Brand:</strong> ${car.brand}</p>
+            <p><strong>Year:</strong> ${car.manufacturedYear}</p>
+            <p><strong>Doors:</strong> ${car.doors}</p>
+            <div class="price-div">
+             <p class="price-p"><strong>Price:</strong></p>
+             <h4>$${car.price}</h4> 
+            </div>
+        </div>
+        <span><strong>Available:</strong> ${car.available}</span>
+        <button class="delete-btn">Delete</span>
+     </div>
         `;
 
-    carContainer.appendChild(carCard);
+    carList.appendChild(carCard);
   });
-}
-
-function addToCart(carId) {
-  alert(`Car with ID ${carId} added to cart!`);
 }
 
 window.onload = displayCars;

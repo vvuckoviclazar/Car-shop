@@ -1,6 +1,8 @@
 "use strict";
 
 const carList = document.querySelector(".car-list");
+const availabilitySelect = document.querySelector(".availability");
+const sortSelect = document.querySelector(".options");
 
 const cars = [
   {
@@ -105,15 +107,17 @@ const cars = [
   },
 ];
 
-function displayCars() {
-  cars.forEach((car) => {
+function displayCars(filteredCars) {
+  carList.innerHTML = "";
+
+  filteredCars.forEach((car) => {
     const carCard = document.createElement("li");
     carCard.classList.add("car-card");
 
     carCard.innerHTML = `
      <h3>${car.name}</h3>
      <div class="li-div">
-      <img src="${car.image}"  class="car-image-${car.id} car-img">
+      <img src="${car.image}" class="car-image-${car.id} car-img">
         <div class="info-div">
            <p><strong>Brand:</strong> ${car.brand}</p>
             <p><strong>Year:</strong> ${car.manufacturedYear}</p>
@@ -124,12 +128,10 @@ function displayCars() {
             </div>
         </div>
         <span><strong>Available:</strong> ${car.available}</span>
-        <button class="delete-btn">Delete</span>
+        <button class="delete-btn">Delete</button>
      </div>
-        `;
+    `;
 
     carList.appendChild(carCard);
   });
 }
-
-window.onload = displayCars;

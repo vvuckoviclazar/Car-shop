@@ -11,7 +11,7 @@ body {
   align-items: center;
   flex-direction: column;
   background-color: rgb(221, 221, 221);
-  padding: 0rem 60rem 0rem 60rem;
+  padding: 0rem 80rem 0rem 80rem;
 }
 
 html {
@@ -87,7 +87,7 @@ span {
   gap: 5rem;
   background-color: rgb(92, 92, 92);
   width: 100%;
-  padding: 10rem 0rem 5rem 852rem;
+  padding: 10rem 0rem 5rem 810rem;
 }
 
 label {

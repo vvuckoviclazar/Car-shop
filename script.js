@@ -4,17 +4,6 @@ const carList = document.querySelector(".car-list");
 const availabilitySelect = document.querySelector(".availability");
 const sortSelect = document.querySelector(".options");
 
-let availability;
-let sortOption;
-
-availabilitySelect.addEventListener("change", (e) => {
-  availability = availabilitySelect.value;
-});
-
-sortSelect.addEventListener("change", (e) => {
-  sortOption = sortSelect.value;
-});
-
 const cars = [
   {
     id: 1,
@@ -118,53 +107,6 @@ const cars = [
   },
 ];
 
-function carCreator() {
-  const getName = (car) => {
-    return car.name;
-  };
-
-  const getBrand = (car) => {
-    return car.brand;
-  };
-
-  const getYear = (car) => {
-    return car.manufacturedYear;
-  };
-
-  const getDoors = (car) => {
-    return car.doors;
-  };
-
-  const getImage = (car) => {
-    return car.image;
-  };
-
-  const getId = (car) => {
-    return car.id;
-  };
-
-  const getPrice = (car) => {
-    return car.price;
-  };
-
-  const isAvailable = (car) => {
-    return car.available;
-  };
-
-  return {
-    getName,
-    getBrand,
-    getDoors,
-    getYear,
-    getImage,
-    getId,
-    getPrice,
-    isAvailable,
-  };
-}
-
-const creator = carCreator();
-
 function carManager() {
   let filteredCars = [...cars];
 
@@ -181,7 +123,7 @@ function carManager() {
   };
 
   const deleteCar = (id) => {
-    setCars(manager.getCars().filter((car) => creator.getId(car) !== id));
+    setCars(filteredCars.filter((car) => car.id !== id));
   };
 
   return { getCars, setCars, resetCars, deleteCar };
@@ -189,86 +131,161 @@ function carManager() {
 
 const manager = carManager();
 
+let availability;
+let sortOption;
+
+availabilitySelect.addEventListener("change", (e) => {
+  availability = e.target.value;
+  console.log(e.target.value);
+  console.log(e.target);
+  console.log(e.target.value.split("-"));
+  const [key, value] = availability.split("-");
+  // carsData = carsData.filter((car) => car.available === "Yes");
+  let carsData = manager.getCars();
+
+  carsData = carsData.filter((car) => car[key] === value);
+  console.log(carsData);
+  manager.setCars(carsData);
+  displayCars(manager.getCars());
+});
+
+sortSelect.addEventListener("change", (e) => {
+  sortOption = sortSelect.value;
+});
+
+function carCreator(car) {
+  let name = car.name;
+  let brand = car.brand;
+  let year = car.manufacturedYear;
+  let doors = car.doors;
+  let price = car.price;
+  let available = car.available;
+  let image = car.image;
+  let id = car.id;
+
+  const getName = () => {
+    return name;
+  };
+
+  const getBrand = () => {
+    return brand;
+  };
+
+  const getYear = () => {
+    return year;
+  };
+
+  const getDoors = () => {
+    return doors;
+  };
+
+  const getImage = () => {
+    return image;
+  };
+
+  const getId = () => {
+    return id;
+  };
+
+  const getPrice = () => {
+    return price;
+  };
+
+  const isAvailable = () => {
+    return available;
+  };
+
+  return {
+    getName,
+    getBrand,
+    getDoors,
+    getYear,
+    getImage,
+    getId,
+    getPrice,
+    isAvailable,
+  };
+}
+
 function displayCars(filteredCars) {
   carList.innerHTML = "";
-
+  console.log("filteredCars", filteredCars);
   filteredCars.forEach((car) => {
+    const carLi = carCreator(car);
     const carCard = document.createElement("li");
     carCard.classList.add("car-card");
+    carCard.id = carLi.getId();
 
     carCard.innerHTML = `
-     <h3>${creator.getName(car)}</h3>
-     <div class="li-div">
-      <img src="${creator.getImage(car)}" class="car-img" 
-      id="${creator.getId(car)}">
+      <h3>${carLi.getName()}</h3>
+      <div class="li-div">
+        <img src="${carLi.getImage()}" class="car-img" id="${carLi.getId()}">
         <div class="info-div">
-           <p><strong>Brand:</strong> ${creator.getBrand(car)}</p>
-            <p><strong>Year:</strong> ${creator.getYear(car)}</p>
-            <p><strong>Doors:</strong> ${creator.getDoors(car)}</p>
-            <div class="price-div">
-             <p class="price-p"><strong>Price:</strong></p>
-             <h4>$${creator.getPrice(car)}</h4> 
-            </div>
+          <p><strong>Brand:</strong> ${carLi.getBrand()}</p>
+          <p><strong>Year:</strong> ${carLi.getYear()}</p>
+          <p><strong>Doors:</strong> ${carLi.getDoors()}</p>
+          <div class="price-div">
+            <p class="price-p"><strong>Price:</strong></p>
+            <h4>$${carLi.getPrice()}</h4> 
+          </div>
         </div>
-        <span><strong>Available:</strong> ${creator.isAvailable(car)}</span>
+        <span class="${
+          carLi.isAvailable() === "Yes" ? "car-available" : "car-notAvailable"
+        }">
+          <strong>Available:</strong> ${carLi.isAvailable()}
+        </span>
         <button class="delete-btn">Delete</button>
-     </div>
+      </div>
     `;
-
-    const span = carCard.querySelector("span");
-
-    if (creator.isAvailable(car) === "Yes") {
-      span.style.backgroundColor = "rgb(54, 187, 54)";
-    } else {
-      span.style.backgroundColor = "rgb(217, 48, 48)";
-    }
-
-    const deleteBtn = carCard.querySelector(".delete-btn");
-
-    deleteBtn.addEventListener("click", () => {
-      manager.deleteCar(creator.getId(car));
-      carCard.remove();
-      displayCars(manager.getCars());
-    });
 
     carList.appendChild(carCard);
   });
 }
 
+carList.addEventListener("click", (e) => {
+  const carCard = e.target.closest("li");
+  if (!carCard) return;
+
+  const id = parseInt(carCard.id);
+  const selectedCar = manager.getCars().find((car) => car.id === id);
+  if (!selectedCar) return;
+
+  if (e.target.classList.contains("delete-btn")) {
+    manager.deleteCar(id);
+    displayCars(manager.getCars());
+  }
+});
+
 function updateCarList() {
   manager.resetCars();
-
   let carsData = manager.getCars();
 
-  if (availability === "available") {
-    carsData = carsData.filter((car) => creator.isAvailable(car) === "Yes");
-  } else if (availability === "availableNot") {
-    carsData = carsData.filter((car) => creator.isAvailable(car) === "No");
-  }
+  // if (availability === "available") {
+  //   carsData = carsData.filter((car) => car.available === "Yes");
+  // } else if (availability === "availableNot") {
+  //   carsData = carsData.filter((car) => car.available === "No");
+  // }
 
   if (sortOption === "AZ") {
-    carsData.sort((carA, carB) =>
-      creator.getName(carA).localeCompare(creator.getName(carB))
-    );
+    carsData.sort((a, b) => a.name.localeCompare(b.name));
   } else if (sortOption === "ZA") {
-    carsData.sort((carA, carB) =>
-      creator.getName(carB).localeCompare(creator.getName(carA))
-    );
+    carsData.sort((a, b) => b.name.localeCompare(a.name));
   } else if (sortOption === "priceLowest") {
-    carsData.sort(
-      (carA, carB) => creator.getPrice(carA) - creator.getPrice(carB)
-    );
+    carsData.sort((a, b) => a.price - b.price);
   } else if (sortOption === "priceHighest") {
-    carsData.sort(
-      (carA, carB) => creator.getPrice(carB) - creator.getPrice(carA)
-    );
+    carsData.sort((a, b) => b.price - a.price);
   }
 
   manager.setCars(carsData);
-  displayCars(manager.getCars());
+  // displayCars(manager.getCars());
 }
 
 availabilitySelect.addEventListener("change", updateCarList);
 sortSelect.addEventListener("change", updateCarList);
 
 displayCars(manager.getCars());
+
+// const [key, value] =
+// dynamic variables javascript
+// array destructuring javascript
+// string metod split

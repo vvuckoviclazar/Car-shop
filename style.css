@@ -102,3 +102,11 @@ select {
   padding: 5rem;
   border-radius: 5rem;
 }
+
+.car-available {
+  background-color: rgb(54, 187, 54);
+}
+
+.car-notAvailable {
+  background-color: rgb(217, 48, 48);
+}

@@ -136,21 +136,34 @@ let sortOption;
 
 availabilitySelect.addEventListener("change", (e) => {
   availability = e.target.value;
-  console.log(e.target.value);
-  console.log(e.target);
-  console.log(e.target.value.split("-"));
-  const [key, value] = availability.split("-");
-  // carsData = carsData.filter((car) => car.available === "Yes");
-  let carsData = manager.getCars();
 
-  carsData = carsData.filter((car) => car[key] === value);
-  console.log(carsData);
+  const [key, value] = availability.split("-");
+
+  let carsData = [...cars];
+
+  carsData = carsData.filter(
+    (car) => car[key] === (key === "doors" ? Number(value) : value)
+  );
+
   manager.setCars(carsData);
   displayCars(manager.getCars());
 });
 
 sortSelect.addEventListener("change", (e) => {
-  sortOption = sortSelect.value;
+  sortOption = e.target.value;
+
+  const [key, order] = sortOption.split("-");
+  let carsData = manager
+    .getCars()
+    .sort(
+      (a, b) =>
+        (typeof a[key] === "string"
+          ? a[key].localeCompare(b[key])
+          : a[key] - b[key]) * (order === "descending" ? -1 : 1)
+    );
+
+  manager.setCars(carsData);
+  displayCars(carsData);
 });
 
 function carCreator(car) {
@@ -255,33 +268,6 @@ carList.addEventListener("click", (e) => {
     displayCars(manager.getCars());
   }
 });
-
-function updateCarList() {
-  manager.resetCars();
-  let carsData = manager.getCars();
-
-  // if (availability === "available") {
-  //   carsData = carsData.filter((car) => car.available === "Yes");
-  // } else if (availability === "availableNot") {
-  //   carsData = carsData.filter((car) => car.available === "No");
-  // }
-
-  if (sortOption === "AZ") {
-    carsData.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortOption === "ZA") {
-    carsData.sort((a, b) => b.name.localeCompare(a.name));
-  } else if (sortOption === "priceLowest") {
-    carsData.sort((a, b) => a.price - b.price);
-  } else if (sortOption === "priceHighest") {
-    carsData.sort((a, b) => b.price - a.price);
-  }
-
-  manager.setCars(carsData);
-  // displayCars(manager.getCars());
-}
-
-availabilitySelect.addEventListener("change", updateCarList);
-sortSelect.addEventListener("change", updateCarList);
 
 displayCars(manager.getCars());
 

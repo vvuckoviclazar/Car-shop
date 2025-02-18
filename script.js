@@ -142,7 +142,8 @@ availabilitySelect.addEventListener("change", (e) => {
   let carsData = [...cars];
 
   carsData = carsData.filter(
-    (car) => car[key] === (key === "doors" ? Number(value) : value)
+    (car) =>
+      (typeof car[key] === "number" ? String(car[key]) : car[key]) === value
   );
 
   manager.setCars(carsData);
@@ -152,15 +153,17 @@ availabilitySelect.addEventListener("change", (e) => {
 sortSelect.addEventListener("change", (e) => {
   sortOption = e.target.value;
 
-  const [key, order] = sortOption.split("-");
-  let carsData = manager
-    .getCars()
-    .sort(
-      (a, b) =>
-        (typeof a[key] === "string"
-          ? a[key].localeCompare(b[key])
-          : a[key] - b[key]) * (order === "descending" ? -1 : 1)
-    );
+  let carsData = manager.getCars();
+
+  if (sortOption === "AZ") {
+    carsData.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortOption === "ZA") {
+    carsData.sort((a, b) => b.name.localeCompare(a.name));
+  } else if (sortOption === "priceLowest") {
+    carsData.sort((a, b) => a.price - b.price);
+  } else if (sortOption === "priceHighest") {
+    carsData.sort((a, b) => b.price - a.price);
+  }
 
   manager.setCars(carsData);
   displayCars(carsData);
